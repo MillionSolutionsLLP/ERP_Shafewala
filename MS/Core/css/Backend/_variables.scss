@@ -1,0 +1,69 @@
+
+// Body
+$body-bg: #f5f8fa;
+
+// Borders
+$laravel-border-color: darken($body-bg, 10%);
+$list-group-border: $laravel-border-color;
+$navbar-default-border: $laravel-border-color;
+$panel-default-border: darken(#F5F5F5,2%);
+$panel-inner-border: darken(#F5F5F5,2%);
+
+// Brands
+$brand-primary: #E8EAF6;
+$brand-info: #4DD0E1;
+$brand-success: #388E3C;
+$brand-warning: #EEFF41;
+$brand-danger: #BF360C;
+
+// Typography
+$icon-font-path: "~bootstrap-sass/assets/fonts/bootstrap/";
+$font-family-sans-serif: 'IBM Plex Sans Condensed', sans-serif;
+$font-size-base: 12px;
+$line-height-base: 1.2;
+$text-color: #212121;
+
+// Navbar
+$navbar-default-bg:#F5F5F5;
+
+// Buttons
+$btn-default-color: $text-color;
+
+// Inputs
+$input-border: lighten($text-color, 40%);
+$input-border-focus: lighten($brand-primary, 25%);
+$input-color-placeholder: lighten($text-color, 30%);
+
+// Panels
+//$panel-default-heading-bg: darken(#F5F5F5,3%);
+
+// Radius 
+
+$btn-border-radius-base:         0px !default;
+$btn-border-radius-large:        0px !default;
+$btn-border-radius-small:        0px !default;
+
+$input-border-radius:            0px !default;
+$input-border-radius-large:      0px !default;
+$input-border-radius-small:      0px !default;
+
+$panel-border-radius:         0px;
+
+
+
+
+
+
+$panel-bg:                    #fff !default;
+$panel-body-padding:          5px !default;
+$panel-heading-padding:       5px 5px !default;
+$panel-footer-padding:        $panel-heading-padding !default;
+
+
+
+$input-border-focus:            #263238;
+
+$table-cell-padding:            5px !default;
+
+$input-color-placeholder:       #E0E0E0;
+
