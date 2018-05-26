@@ -1,10 +1,4 @@
 
-
-
-
-
-
-
 var input=0;
 $( ".AddSectionBtn" ).bind( "click", function() {
 

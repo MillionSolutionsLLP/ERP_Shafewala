@@ -83,6 +83,32 @@ public static $routes=[
 						],
 
 
+						[
+						'name'=>'BM.Data',
+						'route'=>'/booking/close/',
+						'method'=>'closeBookingStep2',
+						'type'=>'post',
+						],
+
+
+
+						[
+						'name'=>'BM.Data',
+						'route'=>'/booking/close/{UniqId}',
+						'method'=>'closeBookingById',
+						'type'=>'get',
+						],
+
+
+							[
+						'name'=>'BM.Data',
+						'route'=>'/booking/close/final',
+						'method'=>'closeBookingFinal',
+						'type'=>'post',
+						],
+
+						
+
 
 						
 					
@@ -307,6 +333,42 @@ public static $field5=[
 
 
 
+////////////////////////////////////////////////////////////////////////
+// Sub Module Start
+////////////////////////////////////////////////////////////////////////
+public static $table6="BM_Booking";
+
+public static $connection6 ="BM_Master";
+
+public static $tableStatus6=false;
+
+public static $field6=[
+
+['name'=>'ProductCode','vName'=>"Order ID, Product Code, Name, Quantity",'type'=>'string','input'=>'text', 'editLock'=>true ],
+
+
+
+['name'=>'ProductRate','vName'=>"Lost Rate",'type'=>'string','input'=>'number',  ],
+
+['name'=>'ProductQuantity','vName'=>"Lost Quantity",'type'=>'string','input'=>'number',  ],	
+
+
+
+
+
+
+];
+
+
+
+////////////////////////////////////////////////////////////////////////
+// Sub Module End
+////////////////////////////////////////////////////////////////////////
+
+
+
+
+
 
 
 
@@ -369,21 +431,24 @@ public static  function genFormData($edit=false,$data=[],$id=false){
 	if($edit and count($data)>0){
 
 		$model=new Model($id);
-		
-		//dd($model);
+			
+	
+
 
 		$v=$model->where(array_keys($data)[0],$data[array_keys($data)[0]])->first();
 
 		if($v!=null){
 			$v=$v->toArray();
+		}else{
+			$v=$data;
 		}
-		//dd($v);
+		
 
 		if($id){
 		
 				$field="field".$id;
 				foreach (self::$$field as $value) {
-				
+				//dd($v);
 				//var_dump($value);
 				if(array_key_exists($value['name'], $v)){
 
@@ -675,8 +740,14 @@ public static function genFieldData($data){
 				$array['link']=[
 				'mod'=>explode(':', $data['link'])[0] ,	
 			];
-			}
+			
+			
+		//	dd($array);
 
+			
+			}
+			if(array_key_exists('vName', $data))$array['vName']=$data['vName'];
+			if(array_key_exists('editLock', $data))$array['editLock']=$data['editLock'];
 			break;
 
 		case 'email':
@@ -687,6 +758,7 @@ public static function genFieldData($data){
 			'value'=>(array_key_exists('callback', $data) ? self::$data['callback']() : null),
 			'default'=>(array_key_exists('default', $data) ? self::$data['default']() : null),
 			];
+			if(array_key_exists('vName', $data))$array['vName']=$data['vName'];
 			break;
 
 		case 'number':
@@ -696,6 +768,7 @@ public static function genFieldData($data){
 			'type'=>$data['input'],
 			'value'=>(array_key_exists('callback', $data) ? self::$data['callback']() : null),
 			];
+			if(array_key_exists('vName', $data))$array['vName']=$data['vName'];
 			break;
 		case 'option':
 

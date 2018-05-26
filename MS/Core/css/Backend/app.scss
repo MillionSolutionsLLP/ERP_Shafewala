@@ -1,6 +1,6 @@
 
 // Fonts
-@import url(https://fonts.googleapis.com/css?family=IBM+Plex+Sans+Condensed:400);
+@import url(https://fonts.googleapis.com/css?family=Sunflower:300,500,700);
 
 // Variables
 @import "variables";
@@ -107,8 +107,17 @@ body{
 
 
 .ms-live-btn, .ms-api-btn,.ms-mod-btn{
-cursor:pointer  
+cursor:pointer;
+
 }
+
+
+
+.ms-live-btn, .ms-api-btn,.ms-mod-btn{
+cursor:pointer;
+  
+}
+
 
 
 

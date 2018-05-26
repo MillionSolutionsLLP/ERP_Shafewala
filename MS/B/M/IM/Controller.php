@@ -39,6 +39,154 @@ class Controller extends \App\Http\Controllers\Controller
 
 	public function addWard(){
 
+		$id=6;
+		$id2=5;
+		$build=new \MS\Core\Helper\Builder (__NAMESPACE__);
+
+		$build->title("Add IN/OUT Entry")->content($id)->action("addWard")->btn([
+								'action'=>"\\B\\IM\\Controller@indexData",
+								'color'=>"btn-info",
+								'icon'=>"fa fa-fast-backward",
+								'text'=>"Back"
+							])->btn([
+								//'action'=>"\\B\\MAS\\Controller@addCCPost",
+								'color'=>"btn-success",
+								'icon'=>"fa fa-floppy-o",
+								'text'=>"Save"
+							])->js(["IM.J.inWord"])->extraFrom($id2,['title'=>'Product Details','multiple'=>true,'multipleAdd'=>true]);
+
+							return $build->view();
+	}
+		public function addWardPost(R\Ward $r){
+
+				$input=$r->input();
+
+				//dd($input);
+				
+				if(($input['ProductCode'][0]!=null) and ($input['ProductQuantity'][0]!=null and $input['ProductRate'][0]!=null)){
+
+
+							$uniq=$input['UniqId'];
+
+
+							$totalAmount=0;
+							$totalQuntity=0;
+							$data=[
+									[
+										'id'=>7,
+										'code'=>$uniq
+									]
+								];
+							//$returnData['id']=7;	 
+							//goto test;
+							$returnData=Base::migrate($data);
+							//test:
+							//dd($returnData);
+							$rData=[];
+							foreach ($input['ProductCode']as $key => $value) {
+				
+							$model=new Model($returnData['id'],$uniq);
+
+							$product[$value]['ProductAmount']=$input['ProductRate'][$key]*$input['ProductQuantity'][$key];
+							$totalAmount=$totalAmount+$product[$value]['ProductAmount'];
+							$totalQuntity=$totalQuntity+$input['ProductQuantity'][$key];
+
+							if(array_key_exists($value, $rData)){
+
+								$rData[$value]=[
+									//'UniqId'=>$uniq,
+									'ProductCode'=>$value,
+									'ProductRate'=>($rData[$value]['ProductRate']+$input['ProductRate'][$key])/2,
+									'ProductQuantity'=>$rData[$value]['ProductQuantity'] +$input['ProductQuantity'][$key],
+									];
+
+							}else{
+
+								$rData[$value]=[
+									//'UniqId'=>$uniq,
+									'ProductCode'=>$value,
+									'ProductRate'=>$input['ProductRate'][$key],
+									'ProductQuantity'=>$input['ProductQuantity'][$key],
+									];
+
+							}
+								//goto test1;
+								if(count($rData[$value])==3)$model->MS_add($rData[$value],$returnData['id'],$uniq);
+								//test1:
+							}
+
+							
+
+							foreach ($rData as $key => $value) {
+								
+								$model=new Model(1,$input['WarehouseCode']);
+								$func="MS_update";
+								$ProductStock=$value['ProductQuantity'];
+
+								if($model->where('ProductCode',$key)->first()==null){
+									$func="MS_add";
+
+								}else{
+
+									$lastData=$model->where('ProductCode',$key)->first()->toArray();
+									$ProductStock=$ProductStock+$lastData['ProductStock'];
+								
+								}
+								
+
+								$r1Data[$key]=[
+									'ProductCode'=> $key,
+									'ProductStock'=>$ProductStock,
+								];
+
+								switch ($func) {
+									case 'MS_update':
+										//dd($r1Data);
+										$r1Data[$key]['UniqId']=$lastData['UniqId'];
+										$model->$func($r1Data[$key],1,$input['WarehouseCode']);
+										break;
+
+									case 'MS_add':
+										$model->$func($r1Data[$key],1,$input['WarehouseCode']);
+										break;
+									
+									default:
+										# code...
+										break;
+								}
+
+							
+
+							}
+
+
+							dd($r1Data);
+
+
+
+
+						}
+
+
+						$array=[
+
+					'msg'=>[
+						'ProductCode'=>'atleast 1 Product Details must be added '
+
+					],
+
+				];
+
+				 $status=501;
+				 return response()->json($array, $status);
+
+
+				//dd($input);
+
+			}
+
+	public function addWard_old(){
+
 		$id=2;
 		$build=new \MS\Core\Helper\Builder (__NAMESPACE__);
 
@@ -59,7 +207,7 @@ class Controller extends \App\Http\Controllers\Controller
 	}
 
 
-	public function addWardPost(R\Ward $r){
+	public function addWardPost_old(R\Ward $r){
 			//Base::migrate(2);
 
 			$status=200;

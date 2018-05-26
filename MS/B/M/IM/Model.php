@@ -134,31 +134,36 @@ public static function getWarehouseCode(){
         return false;
 
     }
+   public function MS_update($data,$id=0,$code=0,$column=false){
 
-    public function MS_update($data,$id){
+       // $row=$this;
 
-        $row=new Model($id);
-        $row=$row->where('UniqId',$data['UniqId']);
+               if($id)
+                {
+                        if($code){
+                               $row=new Model($id,$code);
+                           }
+               
+                            else
+                            {$row=new Model($id);}
+                }else{
+                    $row=new Model();
+                }
 
         
-        if(array_key_exists('_token', $data))unset($data['_token']);
-          if($row == null){
+        if(!$column)        $column='UniqId';
 
-          $row->add($data);
- 
-           }else{
-
-            
+        $row=$row->where($column,$data[$column]);
+       
+          if(array_key_exists('_token', $data))unset($data['_token']);
           if(array_key_exists('UniqId', $data))unset($data['UniqId']);
-          $row->update($data);
+         $row->update($data);
       
-
-          }
-          
    
         return ['status'=>'200','msg'=>"Data Succesfully added to MSDB."];
 
     }
+
 
     public function MS_add($data,$id=0,$code1=0){
             

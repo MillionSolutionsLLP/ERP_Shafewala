@@ -60,8 +60,9 @@ class Builder{
 
 			
 				foreach ($formdata as $key=>$value) {
-					//var_dump($value);
-					$value['vName']=$value['name'];
+					//dd($value);
+					if(!array_key_exists('vName', $value))$value['vName']=$value['lable'];
+					
 					$value['name']=$value['name']."[]";
 					//dd($value);
 					$value['index']=$this->index;
@@ -78,7 +79,7 @@ class Builder{
 
 		if($this->form>0){
 
-			$this->content.="<div class='ProductDetails row' >";
+			$this->content.="<div class='ProductDetails' >";
 			$this->content.=\MS\Core\Helper\DForm::display($formdata,$formdataArray);	}
 		else{
 
@@ -126,6 +127,80 @@ class Builder{
 	}
 
 
+	public function heading($array){
+
+		foreach ($array as $key => $value) {
+		$this->content.="<div class='col-lg-12'><h3>".$value."</h3></div>";
+		return $this;
+		}
+
+	}
+
+	public function table($vertical=true,$array,$cloumnArray=[],$class=[]){
+
+		if(!array_key_exists('div-root-class', $class))$class['div-root-class']="col-lg-12";
+		if(!array_key_exists('table-class', $class))$class['table-class']="table";
+
+
+		$this->content.="<div class='".$class['div-root-class']."'>";
+
+		$this->content.="<table class='".$class['table-class']."'>";
+
+		if($vertical){
+			$this->content.="<tr>";
+
+			foreach ($cloumnArray as  $value) {
+				
+				$this->content.="<tr>";
+
+				$this->content.="<th>";
+
+				$this->content.=ucfirst($value);
+
+				$this->content.="</th>";
+
+				$this->content.="</tr>";
+			}
+		
+			$this->content.="</tr>";
+
+		}else{
+
+			foreach ($array as $key => $value) {
+				
+
+				$this->content.="<tr>";
+
+				$this->content.="<th>";
+
+				$this->content.=ucfirst($key);
+
+				$this->content.="</th>";
+
+				$this->content.="<td>";
+
+				$this->content.=ucfirst($value);
+
+				$this->content.="</td>";
+
+				$this->content.="</tr>";
+
+
+
+			}
+
+
+		}
+		
+
+
+		$this->content.="</table>";
+		$this->content.="</div>";
+		return $this;
+
+	}
+
+
 	public function extraFrom($id,$data=[]){
 
 		$this->form=$this->form+1;
@@ -136,29 +211,76 @@ class Builder{
 		if (isset($title)) {
 
 
+
 			if(array_key_exists('multiple', $data)){
 
 			if($data['multiple']){
 				$this->form_multiple=true;
 				$this->form_id=preg_replace('/\s+/', '', $data['title']);
 
+				if(array_key_exists('multipleAdd', $data)){
+
+					if($data['multipleAdd']){
+
+							$this->content.='<div class="col-lg-12"><h3>' .$title.'<span ms-id="'.$this->form.'" class="btn btn-default btn-success glyphicon glyphicon-plus pull-right AddSectionBtn"></span></h3></div>';
+					}else{
+						goto end;
+					}
+				
+
+
+				}else{
+
+					end:
+					$this->content.='<div class="col-lg-12"><h3>' .$title.'</h3></div>';
+
+				}
+
+
+
 			}
 
 		    }
 
-		$this->content.='<div class="col-lg-12"><h3>' .$title.'<span ms-id="'.$this->form.'" class="btn btn-default btn-success glyphicon glyphicon-plus pull-right AddSectionBtn"></span></h3></div>';
+		
 		}else{
 			//$this->content.="<div class='col-lg-12'></div>";
 		}
 		
-		$data=[
+		$data2=[
 			'form-class-div'=>"col-lg-3",
 			//'form-class-id'=>$id
 
 		];
 
+		$cdata=[];
 
-		$this->content($id ,[],$data);
+
+
+		if(array_key_exists('data', $data))
+
+		{
+				$cdata=$data['data'];
+				if(is_array($cdata)){
+
+					foreach ($cdata as $key => $value) {
+
+						$this->content($id,$value,$data2);
+						$this->content.="</div>";
+					}
+
+				}
+
+
+		}else{
+
+			$this->content($id ,$cdata,$data2);
+
+		}
+
+
+		
+		
 
 		//return $this;
 

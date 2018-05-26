@@ -132,7 +132,7 @@ public static $tableNo="2";
 
 
 
-public static $connection ="MSDBC";
+//public static $connection ="MSDBC";
 
 public static $allOnSameconnection=false;
 
@@ -143,6 +143,7 @@ public static $allOnSameconnection=false;
 ////////////////////////////////////////////////////////////////////////
 public static $table="IM_Warehouse_Master";
 
+public static $connection ="IM_Master";
 public static $tableStatus=True;
 
 public static $field=[
@@ -178,6 +179,7 @@ public static $field1=[
 ['name'=>'UniqId','type'=>'string','input'=>'auto','callback'=>'genUniqID','default'=>'genUniqID',],
 ['name'=>'ProductCode','type'=>'string','input'=>'text',],
 ['name'=>'ProductStock','type'=>'string','input'=>'text',],
+//['name'=>'LastTransaction','type'=>'string','input'=>'text',],
 
 ];
 
@@ -201,10 +203,8 @@ public static $tableStatus2=true;
 public static $field2=[
 
 ['name'=>'UniqId','type'=>'string','input'=>'auto','callback'=>'genUniqID','default'=>'genUniqID',],
-['name'=>'ProductCode','type'=>'string','input'=>'text','link'=>'PM:0',],
 ['name'=>'WarehouseCode','type'=>'string','input'=>'text','link'=>'IM:0',],
 ['name'=>'TransactionType','type'=>'string','input'=>'text','input'=>'radio','default'=>'direction'],
-['name'=>'TransactionAmount','type'=>'string','input'=>'text',],
 
 ];
 
@@ -212,6 +212,66 @@ public static $field2=[
 ////////////////////////////////////////////////////////////////////////
 // Warehouse Transaction  Module End
 ////////////////////////////////////////////////////////////////////////
+
+
+
+////////////////////////////////////////////////////////////////////////
+// Warehouse Transaction  Module Start
+////////////////////////////////////////////////////////////////////////
+
+public static $connection7 ="IM_Data";
+
+public static $table7="IM_Transaction_";
+
+public static $tableStatus7=true;
+
+public static $field7=[
+
+['name'=>'UniqId','type'=>'string','input'=>'auto','callback'=>'genUniqID','default'=>'genUniqID',],
+['name'=>'ProductCode','type'=>'string','input'=>'text','link'=>'PM:0',],
+['name'=>'ProductRate','type'=>'string','input'=>'text',],
+['name'=>'ProductQuantity','type'=>'string','input'=>'text',],
+
+
+];
+
+
+////////////////////////////////////////////////////////////////////////
+// Warehouse Transaction  Module End
+////////////////////////////////////////////////////////////////////////
+
+
+
+////////////////////////////////////////////////////////////////////////
+// Warehouse Transaction  Module Start
+////////////////////////////////////////////////////////////////////////
+
+public static $connection8 ="IM_Data";
+
+public static $table8="IM_Warehouse_";
+
+public static $tableStatus8=true;
+
+public static $field8=[
+
+['name'=>'UniqId','type'=>'string','input'=>'auto','callback'=>'genUniqID','default'=>'genUniqID',],
+['name'=>'ProductCode','type'=>'string','input'=>'text','link'=>'PM:0',],
+['name'=>'ProductRate','type'=>'string','input'=>'text',],
+['name'=>'ProductQuantity','type'=>'string','input'=>'text',],
+
+
+];
+
+
+////////////////////////////////////////////////////////////////////////
+// Warehouse Transaction  Module End
+////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
 
 
 ////////////////////////////////////////////////////////////////////////
@@ -267,7 +327,55 @@ public static $field4=[
 // Product Stock Data  Module End
 ////////////////////////////////////////////////////////////////////////
 
+////////////////////////////////////////////////////////////////////////
+// Sub Module Start
+////////////////////////////////////////////////////////////////////////
+public static $table5="IM_Booking_";
 
+public static $connection5 ="IM_Data";
+
+public static $tableStatus5=false;
+
+public static $field5=[
+
+['name'=>'ProductCode','type'=>'string','input'=>'text', 'link'=>'PM:0' ],
+
+['name'=>'ProductQuantity','vName'=>"Qua.",'type'=>'string','input'=>'number',  ],
+
+['name'=>'ProductRate','vName'=>"Unit/Rate.",'type'=>'string','input'=>'number',  ],	
+
+];
+
+
+
+////////////////////////////////////////////////////////////////////////
+// Sub Module End
+////////////////////////////////////////////////////////////////////////
+
+
+
+////////////////////////////////////////////////////////////////////////
+// Warehouse Transaction  Module Start
+////////////////////////////////////////////////////////////////////////
+
+public static $connection6 ="IM_Master";
+
+public static $table6="IM_Warehouse_Transaction";
+
+public static $tableStatus6=true;
+
+public static $field6=[
+
+['name'=>'UniqId','type'=>'string','input'=>'auto','callback'=>'genUniqID','default'=>'genUniqID',],
+['name'=>'TransactionType','type'=>'string','input'=>'text','input'=>'radio','default'=>'direction'],
+['name'=>'WarehouseCode','vName'=>"Warehouse",'type'=>'string','input'=>'text','link'=>'IM:0',],
+
+];
+
+
+////////////////////////////////////////////////////////////////////////
+// Warehouse Transaction  Module End
+////////////////////////////////////////////////////////////////////////
 
 
 
@@ -309,6 +417,7 @@ public static function makeWarehouseTable(){
 
 
 
+
 //////////////////////////////
 //////////////////////////////
 //DO NOT EDIT BELOW///////////
@@ -323,21 +432,24 @@ public static  function genFormData($edit=false,$data=[],$id=false){
 	if($edit and count($data)>0){
 
 		$model=new Model($id);
-		
-		//dd($model);
+			
+	
+
 
 		$v=$model->where(array_keys($data)[0],$data[array_keys($data)[0]])->first();
 
 		if($v!=null){
 			$v=$v->toArray();
+		}else{
+			$v=$data;
 		}
-		//dd($v);
+		
 
 		if($id){
 		
 				$field="field".$id;
 				foreach (self::$$field as $value) {
-				
+				//dd($v);
 				//var_dump($value);
 				if(array_key_exists($value['name'], $v)){
 
@@ -598,26 +710,7 @@ public static function rollback($data=[]){
 			}
 		
 
-		// 	$tableNo=7;
-
-		// 	$tableName="table";
-		// 	$fieldName="field";
-		// 	$connectionName="connection";
-
-		// $table=self::getTable($id);
-
-
-		// for ($i=0; $i < $tableNo+1 ; $i++) { 
-
-
-		// if(self::$allOnSameconnection){
-		// 	$connection=self::getConnection();
-		// }else{
-		// 	$connection=self::getConnection($id);
-		// }
-		// \MS\Core\Helper\Comman::deleteTable($table,$connection);	
-
-		// }
+	
 }
 
 
@@ -646,13 +739,16 @@ public static function genFieldData($data){
 			];
 			if (array_key_exists('link', $data)) {
 				$array['link']=[
-
-				'mod'=>explode(':', $data['link'])[0] ,
-			
-
+				'mod'=>explode(':', $data['link'])[0] ,	
 			];
-			}
+			
+			
+		//	dd($array);
 
+			
+			}
+			if(array_key_exists('vName', $data))$array['vName']=$data['vName'];
+			if(array_key_exists('editLock', $data))$array['editLock']=$data['editLock'];
 			break;
 
 		case 'email':
@@ -663,6 +759,7 @@ public static function genFieldData($data){
 			'value'=>(array_key_exists('callback', $data) ? self::$data['callback']() : null),
 			'default'=>(array_key_exists('default', $data) ? self::$data['default']() : null),
 			];
+			if(array_key_exists('vName', $data))$array['vName']=$data['vName'];
 			break;
 
 		case 'number':
@@ -672,15 +769,19 @@ public static function genFieldData($data){
 			'type'=>$data['input'],
 			'value'=>(array_key_exists('callback', $data) ? self::$data['callback']() : null),
 			];
+			if(array_key_exists('vName', $data))$array['vName']=$data['vName'];
 			break;
 		case 'option':
+
+
 			$array=[
 			'lable'=>ucfirst($data['name']),
 			'name'=>$data['name'],
 			'type'=>$data['input'],
 			'data'=>(array_key_exists('callback', $data) ? self::$data['callback']() : null),
-			'editLock'=>$data['editLock'],
 			];
+
+			if(array_key_exists('editLock', $data))$array['editLock']=$data['editLock'];
 			break;
 
 		case 'disable':
@@ -792,6 +893,5 @@ public static function enode($UniqId){
 	$UniqId=str_replace('/','_',$UniqId);
 	return $UniqId;
 }
-
 
 }

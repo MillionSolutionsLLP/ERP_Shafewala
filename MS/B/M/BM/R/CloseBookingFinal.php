@@ -1,11 +1,11 @@
 <?php
 
-namespace B\IM\R;
+namespace B\BM\R;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
 
-class Ward extends FormRequest
+class CloseBookingFinal extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -25,13 +25,10 @@ class Ward extends FormRequest
     public function rules()
     {
          return [
-            'UniqId'=>"required",
+         
             "ProductCode"=>"array",
-            "ProductQuantity"=>"array",
-            "ProductRate"=>"array",
-            "WarehouseCode"=>"required|exists:IM_Master.IM_Warehouse_Master,UniqId",
-     
-          
+            "BookingQuantity"=>"array",
+            "BookingRate"=>"array",
           
             ];
 

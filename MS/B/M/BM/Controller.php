@@ -58,7 +58,7 @@ class Controller extends \App\Http\Controllers\Controller
 								'color'=>"btn-success",
 								'icon'=>"fa fa-floppy-o",
 								'text'=>"Save"
-							])->js(["BM.J.booking"])->extraFrom(2,['title'=>'Product Details','multiple'=>true,]);
+							])->js(["BM.J.booking"])->extraFrom(2,['title'=>'Product Details','multiple'=>true,'multipleAdd'=>true]);
 
 
 		return $build->view();
@@ -240,12 +240,17 @@ class Controller extends \App\Http\Controllers\Controller
 			$id=5;
 		$build=new \MS\Core\Helper\Builder (__NAMESPACE__);
 
-		$build->title("Close Booking")->content($id)->action("addBooking")->
+		$build->title("Close Booking")->content($id)->action("closeBookingStep2")->btn([
+									'action'=>"\\B\\BM\\Controller@indexData",
+									'color'=>"btn-info",
+									'icon'=>"fa fa-fast-backward",
+									'text'=>"Back"
+								])->
 								btn([
 								//'action'=>"\\B\\MAS\\Controller@addCCPost",
 								'color'=>"btn-success",
 								'icon'=>"fa fa-floppy-o",
-								'text'=>"Close"
+								'text'=>"View & Close Booking"
 							]);
 
 
@@ -253,6 +258,116 @@ class Controller extends \App\Http\Controllers\Controller
 
 	}
 
+
+	public function closeBookingStep2(R\CloseBooking $r){
+
+		$code=$r->all()['BookingId'];
+		$model=new Model ();
+
+		$booking=$model->where('UniqId',$code)->first()->toArray();
+
+		$id='2';
+		$model2=new Model($id,$code);
+
+		$dbooking=$model2->get()->toArray();
+		$array['Booking_Details_of_'.$booking['UniqId']]=$booking;
+		foreach ($dbooking as $key => $value) {
+			$value['ProductCode']=$booking['UniqId'].",".$value['ProductCode'].",".\B\PM\Model::getProductbyId($value['ProductCode'])['ProductName'].",".$value['ProductQuantity'];
+			$value['ProductRate']='0';
+			$value['ProductQuantity']='0';
+			$dbooking[$key]=$value;
+		}
+
+		$array['Detailed_Booking']=$dbooking;
+		
+		
+				$build=new \MS\Core\Helper\Builder (__NAMESPACE__);
+
+
+		$tableArray=[
+
+			"Booking ID"=>": ".$booking['UniqId'],
+			"Booking Party Name"=>": ".$booking['BookingParty'],
+			"Booking Contact No."=>": ".$booking['BookingContactNo']
+
+		];
+
+		$classArray=[
+			'div-root-class'=>'col-lg-6',
+
+		];
+
+		$build->title("Close Booking")->action("closeBookingFinal")->btn([
+									'action'=>"\\B\\BM\\Controller@closeBookingForm",
+									'color'=>"btn-info",
+									'icon'=>"fa fa-fast-backward",
+									'text'=>"Back"
+								])->
+								btn([
+								//'action'=>"\\B\\MAS\\Controller@addCCPost",
+								'color'=>"btn-success",
+								'icon'=>"fa fa-floppy-o",
+								'text'=>"Close Booking"
+							])->heading((array)"Booking Details")->table(false,$tableArray,[],$classArray)->extraFrom('6',['title'=>'Product Details','multiple'=>true,'multipleAdd'=>false,'data'=>$array['Detailed_Booking']]);
+
+
+	
+
+
+		//return $build->view();
+
+
+ 		$status=200;
+		$array=[
+	 		'msg'=>"OK",
+	 		'loadData'=>(string)$build->view(),
+	 		];
+	
+
+
+	 		return response()->json($array, $status);
+
+		//dd($dbooking);
+
+
+	}
+
+
+
+	public function closeBookingFinal(R\CloseBookingFinal $r){
+		$input=$r->all();
+
+
+
+
+		if(array_key_exists('_token', $input))unset($input['_token']);
+
+
+		$finalArray=[];
+		$oderId=false;
+		foreach ($input['ProductCode'] as $key => $value) {
+			
+			$explArray=explode(',', $value);
+
+			if(!$oderId)$oderId=$explArray[0];
+
+			$finalArray[$key]['ProductCode']=$explArray[1];
+			$finalArray[$key]['LostRate']=$input['ProductRate'][$key] ;
+			$finalArray[$key]['LostQua']=$input['ProductQuantity'][$key] ;
+
+
+
+		}
+		$id='2';
+
+		foreach ($finalArray as $key => $value) {
+			$model=new Model($id,$oderId);
+
+		}
+		
+		dd($finalArray);
+
+	}
 
 	public function viewAllBooking(){
 
@@ -272,6 +387,77 @@ class Controller extends \App\Http\Controllers\Controller
 
 		//dd($data);
 		return view("BM.V.Object.ViewAllList")->with('data',$data);
+
+	}
+
+
+
+	public function closeBookingById($UniqId){
+
+			//$UniqId=\MS\Core\Helper\Comman::de4url($UniqId);
+
+			$code=\MS\Core\Helper\Comman::de4url($UniqId);
+			$model=new Model ();
+			$booking=$model->where('UniqId',$code)->first()->toArray();
+
+		$id='2';
+		$model2=new Model($id,$code);
+
+		$dbooking=$model2->get()->toArray();
+		$array['Booking_Details_of_'.$booking['UniqId']]=$booking;
+		foreach ($dbooking as $key => $value) {
+			$value['ProductCode']=$booking['UniqId'].",".$value['ProductCode'].",".\B\PM\Model::getProductbyId($value['ProductCode'])['ProductName'].",".$value['ProductQuantity'];
+			$value['ProductRate']='0';
+			$value['ProductQuantity']='0';
+			$dbooking[$key]=$value;
+		}
+
+		$array['Detailed_Booking']=$dbooking;
+		
+		
+				$build=new \MS\Core\Helper\Builder (__NAMESPACE__);
+
+
+		$tableArray=[
+
+			"Booking ID"=>": ".$booking['UniqId'],
+			"Booking Party Name"=>": ".$booking['BookingParty'],
+			"Booking Contact No."=>": ".$booking['BookingContactNo']
+
+		];
+
+		$classArray=[
+			'div-root-class'=>'col-lg-6',
+
+		];
+
+		$build->title("Close Booking")->action("closeBookingFinal")->btn([
+									'action'=>"\\B\\BM\\Controller@indexData",
+									'color'=>"btn-info",
+									'icon'=>"fa fa-fast-backward",
+									'text'=>"Back"
+								])->
+								btn([
+								//'action'=>"\\B\\MAS\\Controller@addCCPost",
+								'color'=>"btn-success",
+								'icon'=>"fa fa-floppy-o",
+								'text'=>"Close Booking"
+							])->heading((array)"Booking Details")->table(false,$tableArray,[],$classArray)->extraFrom('6',['title'=>'Product Details','multiple'=>true,'multipleAdd'=>false,'data'=>$array['Detailed_Booking']]);
+
+
+	
+
+
+		//return $build->view();
+
+
+
+
+	 		return (string)$build->view();
+
+				
+		
+			
 
 	}
 

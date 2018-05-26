@@ -67,11 +67,16 @@ $("#error").html("");
                 },
                 // Ajax events
                 success: completeHandler = function(data) {
-                 // alert("Your action taken succefully.!");
-                 //$(".ms-process-bar").css("width", "80%");
-               // console.log(data);
-                //alert("test");
-                if("redirect" in data){
+            
+                var dataload=0
+               console.log(data.loadData);  
+               if("loadData" in data){
+
+                     $(".ms-mod-tab").html(data.loadData);;
+
+                  }else{
+                    
+                            if("redirect" in data){
                     //$(".ms-process-bar").css("width", "100%");
                    //localStorage.LastPage = data.redirect_page;
                     $(".ms-mod-tab").slideUp();
@@ -98,8 +103,10 @@ $("#error").html("");
                         location.reload();
                       }
 
-                    //$(".ms-process-bar").css("width", "100%");
-                   // location.reload();
+                }
+
+        
+
                 }
                 // alert(data.redirect);
                   //location.replace(data.redirect);

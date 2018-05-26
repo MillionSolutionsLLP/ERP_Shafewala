@@ -7,7 +7,7 @@
 
 
     <tr>
-    <th colspan="6"> <strong> Booking List</strong> </th>
+    <th colspan="7"> <strong>Current Booking List</strong> </th>
   
 </tr>
 
@@ -17,6 +17,7 @@
     <th colspan="1"> <strong>  Product</strong> </th>
     <th colspan="1"> <strong>  Booking Amount</strong> </th>
 	<th colspan="1"> <starong> Booking Date</strong> </th>
+    <th colspan="1"> <starong> Booking Status</strong> </th>
     <th colspan="1"> <starong> Action</strong> </th>
 	
 </tr>
@@ -30,15 +31,9 @@
 
     @if(($row['BookingStatus'] == 0) or ($row['BookingStatus'] == 1) or ($row['BookingStatus'] == 2)  )
 
+<?php 
 
-
-    <tr>
-    	
-
-    	<?php 
-       // dd( $row);
-      //  dd(\Carbon::createFromFormat('Y-m-d', $row['BookingDate'])->diffForHumans(\Carbon::now()));
-        $date=\Carbon::createFromFormat('Y-m-d', $row['BookingDate'])->format('d-m-Y');
+                $date=\Carbon::createFromFormat('Y-m-d', $row['BookingDate'])->format('d-m-Y');
         $comming=\Carbon::createFromFormat('Y-m-d', $row['BookingDate'])->diffForHumans(\Carbon::now());
 
 
@@ -46,10 +41,10 @@
         $lable='info';
       //  dd(\Carbon::createFromFormat('Y-m-d', $row['BookingDate'])->diffInDays(\Carbon::now(),true));
         if(\Carbon::createFromFormat('Y-m-d', $row['BookingDate'])->diffInDays(\Carbon::now(),true) > 0 ){
-             $lable='info';
+             $lable2='info';
 
              if(\Carbon::createFromFormat('Y-m-d', $row['BookingDate'])->diffInDays(\Carbon::now(),true) < 16 ){
-             $lable='danger';
+             $lable2='danger';
             }
         }
 
@@ -59,10 +54,37 @@
 
         $qun=$model->get()->sum('ProductQuantity');
         $pmArray=$model->get()->toArray();
-        //dd($model->get()->toArray()) ;
+        switch ($row['BookingStatus']) {
+            case '0':
+                $lable='info';
+                break;
+            
+
+            case '1':
+                $lable='warning';
+                break;
+
+            case '2':
+                $lable='success';
+                break;
+
+            case '3':
+                $lable='danger';
+                break;
 
 
-        ?>
+
+            default:
+                $lable='default';
+                break;
+        }
+
+?>
+
+    <tr class="{{$lable}}">
+    	
+
+
         <td> {{ $row['UniqId'] }}</td>
     	<td>{{ $row['BookingParty'] }}</td>
         <td>
@@ -84,18 +106,16 @@
            </table>
          </td>
         <td class="text-success"> ₹ {{ $row['BookingAmount'] }}</td>
-        <td>{{$date}} <span class="label label-{{ $lable }} ">{{ $comming }}</span></td>
+        <td>{{$date}} <span class="label label-{{ $lable2 }} ">{{ $comming }}</span></td>
 
-    	<?php 
-    	//action('/B/MAS/Controller@editTax', ['UniqId' => 1])
-    	?>
+            <td><center >{{\B\BM\Model::getStatusfromCode($row['BookingStatus'])}}</center></td>
     	<td>
     		
     		<div class="btn-group btn-default">
     		<div class="btn btn-success ms-mod-btn" ms-live-link=" {{action("\B\BM\Controller@editBooking",['UniqId'=>\MS\Core\Helper\Comman::en4url($row['UniqId'])]) }}"><i class="glyphicon glyphicon-pencil"></i></div>
 
-        <!--     <div class="btn btn-danger ms-mod-btn" ms-live-link=" {{action("\B\PM\Controller@deleteProduct",['UniqId'=>\MS\Core\Helper\Comman::en4url($row['UniqId'])]) }}"><i class="fa fa-trash"></i></div>
-    	 -->
+            <div class="btn btn-danger ms-mod-btn" ms-live-link=" {{action("\B\BM\Controller@closeBookingById",['UniqId'=>\MS\Core\Helper\Comman::en4url($row['UniqId'])]) }}"><i class="fa fa-times"></i></div>
+    	
     		</div>
 
     	</td>

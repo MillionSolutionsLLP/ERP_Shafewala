@@ -127,10 +127,26 @@ protected $base_Field;
 
     }
 
-    public function MS_update($data,$id){
+    public function MS_update($data,$id=0,$code=0,$column=false){
 
-        $row=new Model($id);
-        $row=$row->where('UniqId',$data['UniqId']);
+       // $row=$this;
+
+               if($id)
+                {
+                        if($code){
+                               $row=new Model($id,$code);
+                           }
+               
+                            else
+                            {$row=new Model($id);}
+                }else{
+                    $row=new Model();
+                }
+
+        
+        if(!$column)        $column='UniqId';
+
+        $row=$row->where($column,$data[$column]);
         //dd($data);
           if(array_key_exists('_token', $data))unset($data['_token']);
           if(array_key_exists('UniqId', $data))unset($data['UniqId']);
