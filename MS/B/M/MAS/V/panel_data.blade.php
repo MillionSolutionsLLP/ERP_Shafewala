@@ -1,28 +1,16 @@
-
-
-
-<div class="">
-
-    <div class="container-fluid">
-
-
-
-
-<div class="col-lg-3">
+<div class="col-lg-2" style="padding-left: 0px; padding-right: 2px;">
 	
 @include("MAS.V.Object.side")
 </div>
 
 
-<div class="col-lg-9">
+<div class="col-lg-10" style="padding-right: 0px;padding-left: 2px;">
 <div class="ms-mod-tab">
-@include("MAS.V.Object.MasterDetails")
+@include("MAS.V.Object.MasterDetails",['data'=>$data])
 
 
 </div>
 
-</div>
-</div>
 </div>
 
 

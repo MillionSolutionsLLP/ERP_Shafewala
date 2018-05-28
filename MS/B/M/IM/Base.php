@@ -242,34 +242,6 @@ public static $field7=[
 
 
 
-////////////////////////////////////////////////////////////////////////
-// Warehouse Transaction  Module Start
-////////////////////////////////////////////////////////////////////////
-
-public static $connection8 ="IM_Data";
-
-public static $table8="IM_Warehouse_";
-
-public static $tableStatus8=true;
-
-public static $field8=[
-
-['name'=>'UniqId','type'=>'string','input'=>'auto','callback'=>'genUniqID','default'=>'genUniqID',],
-['name'=>'ProductCode','type'=>'string','input'=>'text','link'=>'PM:0',],
-['name'=>'ProductRate','type'=>'string','input'=>'text',],
-['name'=>'ProductQuantity','type'=>'string','input'=>'text',],
-
-
-];
-
-
-////////////////////////////////////////////////////////////////////////
-// Warehouse Transaction  Module End
-////////////////////////////////////////////////////////////////////////
-
-
-
-
 
 
 

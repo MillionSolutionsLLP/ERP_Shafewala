@@ -11,11 +11,35 @@ class Controller extends \App\Http\Controllers\Controller
 	public function index(){
 
 
-		//Base::migrate([['id'=>0]]);
 
-		//Base::migrate([['id'=>0]]);
+			   $model=new Model(0);
+			   $data=$model->where('BookingStatus','2')->get();
+
+			   $model1=new Model(0);
+			   $data1=$model1->where('BookingStatus','0')->orWhere('BookingStatus','1')->get();
+
+
+			   $model2=new Model(0);
+			   $data2=$model2->where('BookingStatus','3')->get();
+
+			   $model3=new Model(0);
+			   $data3=$model3->Where('BookingStatus','1')->orWhere('BookingStatus','2')->get();
+
+
+
+        if($data != null  )$data= $data->toArray();
+        if($data1 != null  )$data1= $data1->toArray();
+        if($data2 != null  )$data2= $data2->sum('BookingAmount');
+        if($data3 != null  )$data3= $data3->sum('BookingAmount');
+
+		  // dd($data1);
+
 
 			$data=[
+				'total_open_orders'=>count($data),
+				'total_upcoming_orders'=>count($data1),
+				'total_received'=>$data2,
+				'total_due'=>$data3
 
 			
 
@@ -31,7 +55,34 @@ class Controller extends \App\Http\Controllers\Controller
 
 
 
+			   $model=new Model(0);
+			   $data=$model->where('BookingStatus','2')->get();
+
+			   $model1=new Model(0);
+			   $data1=$model1->where('BookingStatus','0')->orWhere('BookingStatus','1')->get();
+
+			   $model2=new Model(0);
+			   $data2=$model2->where('BookingStatus','3')->get();
+
+			   $model3=new Model(0);
+			   $data3=$model3->Where('BookingStatus','1')->orWhere('BookingStatus','2')->get();
+
+
+     
+
+        if($data != null  )$data= $data->toArray();
+        if($data1 != null  )$data1= $data1->toArray();
+        if($data2 != null  )$data2= $data2->sum('BookingAmount')+$data2->sum('BookingLostAmount');
+        if($data3 != null  )$data3= $data3->sum('BookingAmount')+$data3->sum('BookingLostAmount');
+
+		  // dd($data1);
+
+
 			$data=[
+				'total_open_orders'=>count($data),
+				'total_upcoming_orders'=>count($data1),
+				'total_received'=>$data2,
+				'total_due'=>$data3
 
 			
 

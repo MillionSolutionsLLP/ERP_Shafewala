@@ -1,24 +1,16 @@
-<div class="">
-
-    <div class="container-fluid">
-
-
-
-
-<div class="col-lg-3">
-	@include("PM.V.Object.side")
-
+<div class="col-lg-2" style="padding-left: 0px; padding-right: 2px;">
+	
+@include("PM.V.Object.side")
 </div>
 
 
-<div class="col-lg-9">
+<div class="col-lg-10" style="padding-right: 0px;padding-left: 2px;">
 <div class="ms-mod-tab">
+@include("PM.V.Object.MasterDetails",['data'=>$data])
 
-	@include("PM.V.Object.MasterDetails")
-</div>
 
 </div>
-</div>
+
 </div>
 
 
