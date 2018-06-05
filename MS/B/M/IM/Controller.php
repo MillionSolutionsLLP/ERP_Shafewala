@@ -61,14 +61,13 @@ class Controller extends \App\Http\Controllers\Controller
 
 				$input=$r->input();
 
-				//dd($input);
 				
 				if(($input['ProductCode'][0]!=null) and ($input['ProductQuantity'][0]!=null and $input['ProductRate'][0]!=null)){
 
 
+
+
 							$uniq=$input['UniqId'];
-
-
 							$totalAmount=0;
 							$totalQuntity=0;
 							$data=[
@@ -77,11 +76,7 @@ class Controller extends \App\Http\Controllers\Controller
 										'code'=>$uniq
 									]
 								];
-							//$returnData['id']=7;	 
-							//goto test;
 							$returnData=Base::migrate($data);
-							//test:
-							//dd($returnData);
 							$rData=[];
 							foreach ($input['ProductCode']as $key => $value) {
 				
@@ -93,12 +88,15 @@ class Controller extends \App\Http\Controllers\Controller
 
 							if(array_key_exists($value, $rData)){
 
+								$tranPid=$model->where('ProductCode',$value)->first()->toArray()['UniqId'];
+
 								$rData[$value]=[
-									//'UniqId'=>$uniq,
+									'UniqId'=>$tranPid,
 									'ProductCode'=>$value,
 									'ProductRate'=>($rData[$value]['ProductRate']+$input['ProductRate'][$key])/2,
 									'ProductQuantity'=>$rData[$value]['ProductQuantity'] +$input['ProductQuantity'][$key],
 									];
+									if(count($rData[$value])==4)$model->MS_update($rData[$value],$returnData['id'],$uniq);
 
 							}else{
 
@@ -109,35 +107,49 @@ class Controller extends \App\Http\Controllers\Controller
 									'ProductQuantity'=>$input['ProductQuantity'][$key],
 									];
 
-							}
-								//goto test1;
-								if(count($rData[$value])==3)$model->MS_add($rData[$value],$returnData['id'],$uniq);
-								//test1:
+										if(count($rData[$value])==3)$model->MS_add($rData[$value],$returnData['id'],$uniq);
+
 							}
 
-							
 
-							foreach ($rData as $key => $value) {
+							}
+
+
+								
+				foreach ($rData as $key => $value) {
 								
 								$model=new Model(1,$input['WarehouseCode']);
 								$func="MS_update";
 								$ProductStock=$value['ProductQuantity'];
+
+
+
 
 								if($model->where('ProductCode',$key)->first()==null){
 									$func="MS_add";
 
 								}else{
 
+
 									$lastData=$model->where('ProductCode',$key)->first()->toArray();
-									$ProductStock=$ProductStock+$lastData['ProductStock'];
+									if($input['TransactionType']){
+										$ProductStock=$ProductStock+$lastData['ProductStock'];
+									}else{
+										$ProductStock=$lastData['ProductStock']- $ProductStock;
+									}
+									
 								
 								}
-								
+							
 
 								$r1Data[$key]=[
 									'ProductCode'=> $key,
 									'ProductStock'=>$ProductStock,
 								];
+
+
+
+
 
 								switch ($func) {
 									case 'MS_update':
@@ -160,14 +172,14 @@ class Controller extends \App\Http\Controllers\Controller
 							}
 
 
-							dd($r1Data);
 
 
 
 
 						}
 
-
+						dd($r1Data);
+					
 						$array=[
 
 					'msg'=>[

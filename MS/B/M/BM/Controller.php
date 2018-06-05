@@ -23,23 +23,28 @@ class Controller extends \App\Http\Controllers\Controller
 			   $data2=$model2->where('BookingStatus','3')->get();
 
 			   $model3=new Model(0);
-			   $data3=$model3->Where('BookingStatus','1')->orWhere('BookingStatus','2')->get();
+			   $data3=$model3->where('BookingStatus','1')->orWhere('BookingStatus','2')->get();
 
+			   $model4=new Model(0);
+			   $data4=$model4->get();
 
+//	  dd($data2);
 
         if($data != null  )$data= $data->toArray();
         if($data1 != null  )$data1= $data1->toArray();
-        if($data2 != null  )$data2= $data2->sum('BookingAmount');
-        if($data3 != null  )$data3= $data3->sum('BookingAmount');
-
-		  // dd($data1);
+        if($data2 != null  )$data2= $data2->sum('BookingAmount')+$data2->sum('BookingLostAmount');
+        if($data3 != null  )$data3= $data3->sum('BookingAmount')+$data3->sum('BookingLostAmount');
+        if($data4 != null  )$data4= $data4->toArray();
+		//  dd($data4);
 
 
 			$data=[
 				'total_open_orders'=>count($data),
 				'total_upcoming_orders'=>count($data1),
 				'total_received'=>$data2,
-				'total_due'=>$data3
+				'total_due'=>$data3,
+				'total_order'=>count($data4),
+
 
 			
 
@@ -67,22 +72,25 @@ class Controller extends \App\Http\Controllers\Controller
 			   $model3=new Model(0);
 			   $data3=$model3->Where('BookingStatus','1')->orWhere('BookingStatus','2')->get();
 
+			   $model4=new Model(0);
+			   $data4=$model4->get();
 
      
-
+	
         if($data != null  )$data= $data->toArray();
         if($data1 != null  )$data1= $data1->toArray();
         if($data2 != null  )$data2= $data2->sum('BookingAmount')+$data2->sum('BookingLostAmount');
         if($data3 != null  )$data3= $data3->sum('BookingAmount')+$data3->sum('BookingLostAmount');
-
-		  // dd($data1);
+         if($data4 != null  )$data4= $data4->toArray();
+		
 
 
 			$data=[
 				'total_open_orders'=>count($data),
 				'total_upcoming_orders'=>count($data1),
 				'total_received'=>$data2,
-				'total_due'=>$data3
+				'total_due'=>$data3,
+				'total_order'=>count($data4),
 
 			
 

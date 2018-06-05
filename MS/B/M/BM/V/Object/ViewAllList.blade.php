@@ -23,6 +23,7 @@
 	<th colspan="1"> <strong>  Party Name</strong> </th>
     <th colspan="1"> <strong>  Product</strong> </th>
     <th colspan="1"> <strong>  Booking Amount</strong> </th>
+    <th colspan="1"> <strong>  Amount Paid</strong> </th>
 	<th colspan="1"> <starong> Booking Date</strong> </th>
 
     <th colspan="1"> <starong> Action</strong> </th>
@@ -97,7 +98,11 @@
         
             @foreach($pmArray as $product)
             <tr>
-            <td>{{ \B\PM\Model::getProductbyId( $product['ProductCode'])['ProductName'] }}</td>
+            <td>{{ \B\PM\Model::getProductbyId( $product['ProductCode'])['ProductName'] }},{{ 
+                \B\PM\Model::getProductCatagory(
+                \B\PM\Model::getProductbyId( $product['ProductCode'])['ProductTypeCode']
+)['ProductTypeName']
+             }}</td>
             <td>{{ $product['ProductQuantity']  }}</td>
             </tr>
             @endforeach
@@ -105,6 +110,7 @@
            </table>
          </td>
         <td class="text-success"> ₹ {{ $row['BookingAmount'] }}</td>
+        <td class="text-success"> ₹ {{ $row['BookingAmount'] + $row['BookingLostAmount'] }}</td>
         <td>{{$date}}   <span class="label label-{{ $lable }} ms-text-black pull-right " style="padding: 8px;">{{\B\BM\Model::getStatusfromCode($row['BookingStatus'])}}</span></td>
 
     	<?php 

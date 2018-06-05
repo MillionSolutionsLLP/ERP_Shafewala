@@ -34,7 +34,7 @@
        
 		  <a href="#" class="list-group-item ms-mod-btn" ms-live-link="{{ action('\B\BM\Controller@addBooking') }}"> <i class="fa fa-arrow-circle-down" aria-hidden="true"></i> Add Booking</a>
 
-      <a href="#" class="list-group-item ms-mod-btn" ms-live-link="{{ action('\B\BM\Controller@indexData') }}"> <i class="fa fa-arrow-circle-down" aria-hidden="true"></i> Edit Booking</a>
+      <a href="#" class="list-group-item ms-mod-btn" ms-live-link="{{ action('\B\BM\Controller@viewAllBooking') }}"> <i class="fa fa-arrow-circle-down" aria-hidden="true"></i> Edit Booking</a>
 
       <a href="#" class="list-group-item ms-mod-btn" ms-live-link="{{ action('\B\BM\Controller@closeBookingForm') }}"> <i class="fa fa-arrow-circle-down" aria-hidden="true"></i> Close Booking</a>
 

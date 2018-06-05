@@ -98,7 +98,11 @@
         
             @foreach($pmArray as $product)
             <tr>
-            <td>{{ \B\PM\Model::getProductbyId( $product['ProductCode'])['ProductName'] }}</td>
+            <td>{{ \B\PM\Model::getProductbyId( $product['ProductCode'])['ProductName'] }},{{ 
+                \B\PM\Model::getProductCatagory(
+                \B\PM\Model::getProductbyId( $product['ProductCode'])['ProductTypeCode']
+)['ProductTypeName']
+             }}</td>
             <td>{{ $product['ProductQuantity']  }}</td>
             </tr>
             @endforeach

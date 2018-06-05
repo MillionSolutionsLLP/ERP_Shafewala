@@ -324,6 +324,118 @@ class Comman {
 	}
 
 
+		public static function toINR( $str ,$type='1',$data=[]){
+		$return = '';
+		$str=(String) $str;
+
+
+		switch ($type) {
+			case '1':
+				
+				$num=$str;
+					
+				$explrestunits = "" ;
+			    if(strlen($num)>3) {
+			        $lastthree = substr($num, strlen($num)-3, strlen($num));
+			        $restunits = substr($num, 0, strlen($num)-3); // extracts the last three digits
+			        $restunits = (strlen($restunits)%2 == 1)?"0".$restunits:$restunits; // explodes the remaining digits in 2's formats, adds a zero in the beginning to maintain the 2's grouping.
+			        $expunit = str_split($restunits, 2);
+			        for($i=0; $i<sizeof($expunit); $i++) {
+			            // creates each of the 2's group and adds a comma to the end
+			            if($i==0) {
+			                $explrestunits .= (int)$expunit[$i].","; // if is first value , convert into integer
+			            } else {
+			                $explrestunits .= $expunit[$i].",";
+			            }
+			        }
+			        $thecash = $explrestunits.$lastthree;
+			    } else {
+			        $thecash = $num;
+			    }
+			    
+
+
+//			   $thecash="100,10,10,10,000";
+
+			    if(array_key_exists('short', $data)){
+			    if($data['short']){
+
+
+			    	
+			    	$amountArray=explode(',',$thecash);
+			    	$amountCount=count($amountArray);
+			    	
+			    	//dd($amountArray);
+			    	//dd($amountCount);
+			    	//dd(($amountCount > 0 )&& ($amountCount < 2 ));
+			    	if(($amountCount > 0 )&& ($amountCount < 2 ) ){
+			    		$return=$thecash;
+			    	}elseif ($amountCount < 3) {
+			    		$return=$amountArray[0]." thousand ";
+			    	} elseif($amountCount < 4 && $amountCount > 2 ) {
+			    		$return=$amountArray[0].".".$amountArray[1]." lakh ";
+			    	}
+
+			    	 elseif($amountCount < 5 && $amountCount > 3 ) {
+			    		$return=$amountArray[0].".".$amountArray[1]." crore ";
+			    	}
+			    	// elseif($amountCount < 6 && $amountCount > 4 ) {
+			    	// 	$return=$amountArray[0]." lakh crore ";
+			    	// }
+			    	else{
+			    		$return=$thecash;
+			    	}
+			    	
+			    	return $return;
+
+			    	
+			    		
+
+
+				}else {$return=$thecash;}
+				    }else{
+
+				    	$return=$thecash;
+
+				    }
+
+
+
+
+
+			    if(array_key_exists('symbol', $data)){
+			    if($data['symbol']){$return="₹ ".$thecash;	}else {$return=$thecash;}
+			    }else{
+
+			    	$return=$thecash;
+
+			    }
+
+			   // dd($return);
+			    
+			    
+				
+
+
+
+				break;
+			
+		
+
+
+
+
+
+			default:
+				# code...
+				break;
+		}
+
+		return $return;
+
+	}
+
+
 
 
 }
